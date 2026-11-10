@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # WanderLust 🌍 | Vacation Rental & Booking Platform
 
 [![Node.js Version](https://img.shields.io/badge/Node.js-v18%2B-green.svg)](https://nodejs.org/)
@@ -254,3 +255,6 @@ npm test
 ## 🛡️ License
 
 This project is licensed under the ISC License. Free to use for educational, demonstration, and personal portfolio purposes.
+=======
+# WanderLust
+>>>>>>> 06df758754153e26e9db9eced5adb3e05af4d718
