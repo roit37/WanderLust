@@ -58,6 +58,34 @@ const bookingSchema = new Schema(
             type: String,
             trim: true,
             default: ""
+        },
+        payment: {
+            method: {
+                type: String,
+                enum: ["razorpay", "demo", "cash"],
+                default: "razorpay"
+            },
+            status: {
+                type: String,
+                enum: ["pending", "paid", "failed", "refunded"],
+                default: "paid"
+            },
+            razorpayOrderId: {
+                type: String,
+                default: null
+            },
+            razorpayPaymentId: {
+                type: String,
+                default: null
+            },
+            razorpaySignature: {
+                type: String,
+                default: null
+            },
+            paidAt: {
+                type: Date,
+                default: null
+            }
         }
     },
     {

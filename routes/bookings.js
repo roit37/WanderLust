@@ -14,7 +14,13 @@ router.get("/host-reservations", isLoggedIn, isHost, catchAsync(bookings.getHost
 // Checkout preview page
 router.get("/checkout/:listingId", isLoggedIn, catchAsync(bookings.renderCheckout));
 
-// Create booking POST
+// Razorpay: Create Order endpoint
+router.post("/create-order/:listingId", isLoggedIn, catchAsync(bookings.createOrder));
+
+// Razorpay: Verify Payment signature & finalize booking
+router.post("/verify-payment/:listingId", isLoggedIn, catchAsync(bookings.verifyPayment));
+
+// Direct / Fallback Booking POST
 router.post("/create/:listingId", isLoggedIn, validateBooking, catchAsync(bookings.postBooking));
 
 // Cancel booking POST

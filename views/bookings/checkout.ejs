@@ -1,5 +1,8 @@
 <%- layout("/layouts/boilerplate") %>
 
+<!-- Razorpay Checkout SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-12 col-lg-10">
@@ -8,59 +11,112 @@
                 <i class="fa-solid fa-chevron-left me-2"></i> Back to property
             </a>
 
-            <h2 class="fw-bold mb-4">Request to book</h2>
+            <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+                <h2 class="fw-bold mb-0">Confirm & Pay</h2>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-light text-dark border px-3 py-2 rounded-pill small">
+                        <i class="fa-solid fa-lock text-success me-1"></i> 256-bit Secure Checkout
+                    </span>
+                    <% if (isRazorpayConfigured) { %>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill small">
+                            <i class="fa-solid fa-bolt me-1"></i> Razorpay Enabled
+                        </span>
+                    <% } else { %>
+                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill small">
+                            <i class="fa-solid fa-info-circle me-1"></i> Test / Demo Mode
+                        </span>
+                    <% } %>
+                </div>
+            </div>
 
             <div class="row g-5">
-                <!-- Left Form Column -->
+                <!-- Left Details & Payment Column -->
                 <div class="col-12 col-md-7">
-                    <form action="/bookings/create/<%= listing._id %>" method="POST">
-                        <input type="hidden" name="booking[checkIn]" value="<%= checkIn %>">
-                        <input type="hidden" name="booking[checkOut]" value="<%= checkOut %>">
-                        <input type="hidden" name="booking[guests]" value="<%= guests %>">
+                    <!-- Trip Details Section -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                        <h5 class="fw-bold mb-3">Your Trip</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <div class="fw-semibold">Dates</div>
+                                <div class="text-muted small">
+                                    <%= new Date(checkIn).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %> – 
+                                    <%= new Date(checkOut).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
+                                    (<%= priceBreakdown.nights %> <%= priceBreakdown.nights === 1 ? 'night' : 'nights' %>)
+                                </div>
+                            </div>
+                            <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-outline-secondary rounded-pill">Change</a>
+                        </div>
 
-                        <!-- Trip Details Section -->
-                        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                            <h5 class="fw-bold mb-3">Your Trip</h5>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <div class="fw-semibold">Dates</div>
-                                    <div class="text-muted small">
-                                        <%= new Date(checkIn).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %> – 
-                                        <%= new Date(checkOut).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
-                                        (<%= priceBreakdown.nights %> <%= priceBreakdown.nights === 1 ? 'night' : 'nights' %>)
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-semibold">Guests</div>
+                                <div class="text-muted small"><%= guests %> <%= guests === 1 ? 'guest' : 'guests' %></div>
+                            </div>
+                            <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-outline-secondary rounded-pill">Change</a>
+                        </div>
+                    </div>
+
+                    <!-- Special Requests -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                        <h5 class="fw-bold mb-2">Message the Host (Optional)</h5>
+                        <p class="text-muted small mb-3">Share arrival details or special requests with <%= listing.owner ? listing.owner.name : 'the host' %>.</p>
+                        <textarea id="specialRequests" rows="3" class="form-control rounded-3" placeholder="Hello! We are looking forward to our stay..."></textarea>
+                    </div>
+
+                    <!-- Payment Method Section -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                        <h5 class="fw-bold mb-3">Payment Method</h5>
+
+                        <!-- Payment Alert Box for dynamic feedback -->
+                        <div id="paymentAlert" class="alert d-none rounded-3 small mb-3" role="alert"></div>
+
+                        <% if (isRazorpayConfigured) { %>
+                            <!-- Razorpay Option Box -->
+                            <div class="border rounded-4 p-3 mb-3 bg-light d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white p-2 rounded-3 border">
+                                        <i class="fa-solid fa-credit-card fs-4 text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">Razorpay Secure Gateway</div>
+                                        <div class="text-muted small">UPI, Debit/Credit Cards, NetBanking, Wallets</div>
                                     </div>
                                 </div>
-                                <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-outline-secondary rounded-pill">Edit</a>
+                                <img src="https://badges.razorpay.com/badge-light.png" alt="Razorpay" style="height: 28px;">
                             </div>
 
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="fw-semibold">Guests</div>
-                                    <div class="text-muted small"><%= guests %> <%= guests === 1 ? 'guest' : 'guests' %></div>
-                                </div>
-                                <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-outline-secondary rounded-pill">Edit</a>
+                            <button type="button" id="razorpayPayBtn" class="btn brand-btn w-100 py-3 rounded-pill text-white fw-bold fs-5 shadow-sm d-flex align-items-center justify-content-center gap-2">
+                                <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                <i class="fa-solid fa-shield-check" id="btnIcon"></i>
+                                <span id="btnText">Pay ₹<%= priceBreakdown.totalPrice.toLocaleString("en-IN") %> via Razorpay</span>
+                            </button>
+                        <% } else { %>
+                            <!-- When Razorpay is not configured yet (Demo Fallback) -->
+                            <div class="alert alert-info border-0 rounded-3 small mb-3">
+                                <i class="fa-solid fa-circle-info me-1"></i>
+                                <strong>Razorpay Credentials Not Set in .env:</strong> You can set <code>RAZORPAY_KEY_ID</code> and <code>RAZORPAY_KEY_SECRET</code> in your <code>.env</code> file for live or test payments. In the meantime, you can test using Instant Confirmation.
                             </div>
-                        </div>
 
-                        <!-- Special Requests -->
-                        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                            <h5 class="fw-bold mb-2">Message the Host</h5>
-                            <p class="text-muted small mb-3">Let <%= listing.owner ? listing.owner.name : 'your host' %> know a little about your trip and arrival time.</p>
-                            <textarea name="booking[specialRequests]" rows="3" class="form-control rounded-3" placeholder="Hello! We are visiting for a weekend vacation and look forward to staying at your home..."></textarea>
-                        </div>
+                            <form action="/bookings/create/<%= listing._id %>" method="POST">
+                                <input type="hidden" name="booking[checkIn]" value="<%= checkIn %>">
+                                <input type="hidden" name="booking[checkOut]" value="<%= checkOut %>">
+                                <input type="hidden" name="booking[guests]" value="<%= guests %>">
+                                <input type="hidden" name="booking[specialRequests]" id="fallbackSpecialRequests" value="">
 
-                        <!-- Ground Rules / Policies -->
-                        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-light">
-                            <h6 class="fw-bold mb-2"><i class="fa-solid fa-shield-halved text-success me-2"></i> Ground rules & cancellation</h6>
-                            <p class="small text-muted mb-0">
-                                We ask every guest to remember a few simple things: follow the house rules, treat the host's home like your own, and respect quiet hours. Free cancellation up to 48 hours prior to check-in.
-                            </p>
-                        </div>
+                                <button type="submit" class="btn brand-btn w-100 py-3 rounded-pill text-white fw-bold fs-5 shadow-sm">
+                                    Confirm Reservation (Instant Test Mode)
+                                </button>
+                            </form>
+                        <% } %>
+                    </div>
 
-                        <button type="submit" class="btn brand-btn w-100 py-3 rounded-pill text-white fw-bold fs-5 shadow-sm">
-                            Confirm and Pay (Demo Checkout)
-                        </button>
-                    </form>
+                    <!-- Ground Rules / Policies -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-light">
+                        <h6 class="fw-bold mb-2"><i class="fa-solid fa-shield-halved text-success me-2"></i> Cancellation Policy & House Rules</h6>
+                        <p class="small text-muted mb-0">
+                            Free cancellation up to 48 hours prior to check-in. By confirming, you agree to the host's house rules, quiet hours, and WanderLust Terms of Service.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Right Price Summary Card -->
@@ -101,3 +157,154 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Client-side Razorpay Checkout Handler
+    document.addEventListener("DOMContentLoaded", () => {
+        const payBtn = document.getElementById("razorpayPayBtn");
+        const specialRequestsInput = document.getElementById("specialRequests");
+        const fallbackSpecial = document.getElementById("fallbackSpecialRequests");
+        const alertBox = document.getElementById("paymentAlert");
+        const btnSpinner = document.getElementById("btnSpinner");
+        const btnIcon = document.getElementById("btnIcon");
+        const btnText = document.getElementById("btnText");
+
+        if (specialRequestsInput && fallbackSpecial) {
+            specialRequestsInput.addEventListener("input", () => {
+                fallbackSpecial.value = specialRequestsInput.value;
+            });
+        }
+
+        if (!payBtn) return;
+
+        const setButtonLoading = (loading, text = "") => {
+            if (loading) {
+                payBtn.disabled = true;
+                btnSpinner.classList.remove("d-none");
+                btnIcon.classList.add("d-none");
+                if (text) btnText.innerText = text;
+            } else {
+                payBtn.disabled = false;
+                btnSpinner.classList.add("d-none");
+                btnIcon.classList.remove("d-none");
+                btnText.innerText = "Pay ₹<%= priceBreakdown.totalPrice.toLocaleString('en-IN') %> via Razorpay";
+            }
+        };
+
+        const showAlert = (message, type = "danger") => {
+            alertBox.className = `alert alert-${type} rounded-3 small mb-3`;
+            alertBox.innerHTML = message;
+            alertBox.classList.remove("d-none");
+            alertBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        };
+
+        payBtn.addEventListener("click", async () => {
+            alertBox.classList.add("d-none");
+            setButtonLoading(true, "Connecting to Razorpay...");
+
+            try {
+                // Step 1: Create Order on backend
+                const orderResponse = await fetch("/bookings/create-order/<%= listing._id %>", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        checkIn: "<%= checkIn %>",
+                        checkOut: "<%= checkOut %>",
+                        guests: "<%= guests %>"
+                    })
+                });
+
+                const orderData = await orderResponse.json();
+
+                if (!orderResponse.ok || !orderData.success) {
+                    throw new Error(orderData.message || "Failed to create payment order.");
+                }
+
+                if (orderData.mode === "demo") {
+                    showAlert("Razorpay is running in demo mode. Please configure Razorpay keys in your environment.", "info");
+                    setButtonLoading(false);
+                    return;
+                }
+
+                // Step 2: Open Razorpay Checkout modal
+                const options = {
+                    key: orderData.keyId,
+                    amount: orderData.amount,
+                    currency: orderData.currency,
+                    name: "WanderLust Stays",
+                    description: `Reservation for ${orderData.listingTitle}`,
+                    image: orderData.listingImage || "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=200&q=80",
+                    order_id: orderData.orderId,
+                    prefill: {
+                        name: orderData.user.name || "",
+                        email: orderData.user.email || ""
+                    },
+                    theme: {
+                        color: "#FF385C"
+                    },
+                    modal: {
+                        ondismiss: function () {
+                            setButtonLoading(false);
+                            showAlert("Payment was cancelled. You have not been charged.", "warning");
+                        }
+                    },
+                    handler: async function (response) {
+                        setButtonLoading(true, "Verifying payment with bank...");
+
+                        try {
+                            // Step 3: Verify cryptographic payment signature on backend
+                            const verifyResponse = await fetch("/bookings/verify-payment/<%= listing._id %>", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                    booking: {
+                                        checkIn: "<%= checkIn %>",
+                                        checkOut: "<%= checkOut %>",
+                                        guests: "<%= guests %>",
+                                        specialRequests: specialRequestsInput ? specialRequestsInput.value : ""
+                                    }
+                                })
+                            });
+
+                            const verifyData = await verifyResponse.json();
+
+                            if (verifyResponse.ok && verifyData.success) {
+                                showAlert("Payment verified! Redirecting to your trips...", "success");
+                                window.location.href = verifyData.redirectUrl || "/bookings/my-trips";
+                            } else {
+                                throw new Error(verifyData.message || "Payment verification failed.");
+                            }
+                        } catch (verifyErr) {
+                            console.error("Verification error:", verifyErr);
+                            showAlert(verifyErr.message || "Could not verify payment. Please contact support.", "danger");
+                            setButtonLoading(false);
+                        }
+                    }
+                };
+
+                const rzp = new Razorpay(options);
+
+                rzp.on("payment.failed", function (response) {
+                    console.error("Razorpay Payment Failed:", response.error);
+                    showAlert(`Payment Failed: ${response.error.description} (Code: ${response.error.code})`, "danger");
+                    setButtonLoading(false);
+                });
+
+                rzp.open();
+                setButtonLoading(false);
+
+            } catch (err) {
+                console.error("Payment initiation error:", err);
+                showAlert(err.message || "An unexpected error occurred while initiating payment.", "danger");
+                setButtonLoading(false);
+            }
+        });
+    });
+</script>

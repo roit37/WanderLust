@@ -21,7 +21,8 @@ An Airbnb-inspired full-stack web application designed for discovering, listing,
 [![Mongoose](https://img.shields.io/badge/Mongoose-ODM-880000?style=flat-square)](https://mongoosejs.com/)
 [![EJS](https://img.shields.io/badge/EJS-Templates-B4CA65?style=flat-square&logo=ejs&logoColor=white)](https://ejs.co/)
 [![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=flat-square&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
-[![Tests Passing](https://img.shields.io/badge/Tests-28%20Passed-2ea44f?style=flat-square&logo=githubactions&logoColor=white)](https://nodejs.org/api/test.html)
+[![Razorpay](https://img.shields.io/badge/Razorpay-Payment%20Gateway-0C2340?style=flat-square&logo=razorpay&logoColor=white)](https://razorpay.com/)
+[![Tests Passing](https://img.shields.io/badge/Tests-31%20Passed-2ea44f?style=flat-square&logo=githubactions&logoColor=white)](https://nodejs.org/api/test.html)
 [![License](https://img.shields.io/badge/License-ISC-blue?style=flat-square)](LICENSE)
 
 </div>
@@ -38,6 +39,7 @@ An Airbnb-inspired full-stack web application designed for discovering, listing,
 - [Database Schema Design](#-database-schema-design)
 - [Getting Started (Local Development)](#-getting-started-local-development)
 - [Environment Configuration](#-environment-configuration)
+- [Razorpay Payment Gateway Setup](#-razorpay-payment-gateway-setup)
 - [MongoDB Atlas Setup Guide](#-mongodb-atlas-setup-guide)
 - [Deployment on Render](#-deployment-on-render)
 - [Pre-Configured Demo Accounts](#-pre-configured-demo-accounts)
@@ -94,13 +96,18 @@ The application is deployed and running live on Render:
   - Sorting by newest, price (low-to-high, high-to-low), and top customer ratings.
   - Server-side pagination with dynamic page controls.
 
-### 3. Conflict-Free Booking Engine
+### 3. Conflict-Free Booking Engine & Razorpay Payments
 - **Availability & Date-Overlap Guard**: Detects and rejects conflicting booking dates (`[checkIn, checkOut)`) against existing confirmed reservations.
 - **Self-Booking Protection**: Prevents hosts from reserving their own properties.
 - **Dynamic Pricing Engine**:
   - Computes stay duration in nights.
   - Automatically calculates accommodation cost, cleaning fee (₹500), and platform service fee (5%).
   - Client-side interactive booking widget with live price recalculation on date change.
+- **Razorpay Real Payment Gateway**:
+  - Seamless checkout supporting **UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, NetBanking, and Wallets**.
+  - Server-side cryptographic HMAC-SHA256 signature verification ensures payments cannot be spoofed or tampered with.
+  - Generates official Razorpay Order ID and records verified Transaction/Payment ID in MongoDB.
+  - Automatic test/demo fallback when keys are omitted so local development and testing never crash.
 - **Reservation Lifecycle**: `pending` → `confirmed` → `completed` / `cancelled`.
 
 ### 4. Verified Reviews & Ratings
@@ -137,6 +144,7 @@ The application is deployed and running live on Render:
 | **Authentication & Security** | [bcryptjs](https://github.com/dcodeIO/bcrypt.js), [Helmet](https://helmetjs.github.io/), [express-rate-limit](https://github.com/express-rate-limit/express-rate-limit), [sanitize-html](https://github.com/apostrophecms/sanitize-html) |
 | **Session Management** | [express-session](https://github.com/expressjs/session), [connect-mongo](https://github.com/jdesboeufs/connect-mongo), [connect-flash](https://github.com/jaredhanson/connect-flash) |
 | **File Uploads** | [Multer](https://github.com/expressjs/multer), [Cloudinary](https://cloudinary.com/), `multer-storage-cloudinary` |
+| **Payment Gateway** | [Razorpay](https://razorpay.com/) (UPI, Cards, NetBanking, HMAC-SHA256 verification) |
 | **Validation** | [Joi](https://joi.dev/) (Server-side schema validation) |
 | **Testing** | Node.js Test Runner (`node:test`), [Supertest](https://github.com/ladjs/supertest) |
 | **Hosting & Cloud** | [Render](https://render.com/) (Web Service), MongoDB Atlas (Database) |
@@ -152,6 +160,7 @@ MAJORPROJECT/
 ├── config/
 │   ├── db.js                 # MongoDB Atlas connection handler
 │   ├── cloudinary.js         # Cloudinary configuration & Multer storage fallback
+│   ├── razorpay.js           # Razorpay SDK initialization & signature verification
 │   └── session.js            # Express session & connect-mongo store setup
 ├── controllers/
 │   ├── listings.js           # Property CRUD, image handling, search & filter
@@ -351,6 +360,10 @@ CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
+# Razorpay Payment Gateway Configuration (Get from https://dashboard.razorpay.com/app/keys)
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+
 # Default Admin Seed Credentials (used during database seeding)
 ADMIN_NAME=Platform Administrator
 ADMIN_EMAIL=admin@wanderlust.com
@@ -363,6 +376,34 @@ HOST_PASSWORD=Host@123456
 GUEST_EMAIL=guest@wanderlust.com
 GUEST_PASSWORD=Guest@123456
 ```
+
+---
+
+## 💳 Razorpay Payment Gateway Setup
+
+WanderLust integrates **Razorpay** to accept real-time payments across **UPI (GPay, PhonePe, Paytm, BHIM), Credit/Debit Cards (Visa, MasterCard, RuPay), NetBanking, and Mobile Wallets**.
+
+### How to Get Your Free Razorpay Test API Keys:
+1. **Sign Up / Log In**: Visit [Razorpay Dashboard](https://dashboard.razorpay.com/) and register for a free account.
+2. **Switch to Test Mode**: At the top-right header, toggle the switch from **Live Mode** to **Test Mode** (no business documentation or KYC required for testing!).
+3. **Generate API Keys**:
+   - Navigate to **Account & Settings** → **API Keys** (under *Website and App Settings*).
+   - Click **Generate Key** (or *Regenerate Key*).
+   - You will receive:
+     - `Key Id` (e.g. `rzp_test_xxxxxxxxxxxxxx`)
+     - `Key Secret` (e.g. `xxxxxxxxxxxxxxxxxxxxxxxx`)
+4. **Configure in `.env`**:
+   Add your keys into `.env` locally:
+   ```env
+   RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxxxx
+   RAZORPAY_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxx
+   ```
+5. **Configure on Render**:
+   - In your Render Web Service dashboard, go to **Environment**.
+   - Add `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`.
+   - Save changes (Render will automatically redeploy with the keys loaded).
+
+> 💡 **Graceful Fallback Mode**: If Razorpay keys are omitted or empty, the application automatically defaults to a frictionless Demo Confirmation mode so local development and automated CI tests (`npm test`) always run smoothly without crashing.
 
 ---
 
@@ -441,12 +482,12 @@ WanderLust includes an integration test suite built with Node's native test runn
 npm test
 ```
 
-### Test Coverage Highlights (28 Passing Tests):
+### Test Coverage Highlights (31 Passing Tests):
 - **Public Navigation**: Root redirects, listing catalog rendering, static information pages.
 - **Authentication**: Registration, duplicate rejection, password hashing, login authorization, session persistence.
 - **Property Management**: Unauthenticated creation block, guest role block, host creation, ownership update/delete enforcement.
 - **Search & Filtering**: Keyword search, category filtering, capacity verification.
-- **Booking Engine**: Checkout preview, valid reservation creation, **conflict rejection on identical dates**, self-booking prevention, guest and host trip lists.
+- **Booking Engine & Payments**: Checkout preview, Razorpay order generation, signature verification rejection on tampering, valid reservation creation, **conflict rejection on identical dates**, self-booking prevention, guest and host trip lists.
 - **Reviews**: Verified stay flag validation, rating calculation, unauthorized deletion prevention, author deletion.
 - **Wishlist**: Toggle favorites, view saved properties.
 - **Dashboards & Admin**: Guest dashboard, host dashboard, non-admin restriction, admin access.
@@ -455,8 +496,8 @@ npm test
 
 ## 🗺️ Future Improvements & Roadmap
 
+- [x] **Payment Gateway**: Integrate Razorpay for real-time payments across UPI, Cards, NetBanking, and Wallets.
 - [ ] **Interactive Maps**: Integrate Mapbox GL JS / Leaflet for dynamic property map pinning and location search.
-- [ ] **Payment Gateway**: Integrate Stripe or Razorpay for real-time checkout and payment processing.
 - [ ] **OAuth Authentication**: Add "Sign in with Google" and "Sign in with GitHub" via Passport.js strategies.
 - [ ] **Automated Email Notifications**: Transactional booking confirmation and cancellation emails using Nodemailer or SendGrid.
 - [ ] **Multi-Image Uploads**: Allow hosts to upload photo galleries (up to 10 images) per property.

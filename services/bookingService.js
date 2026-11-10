@@ -69,7 +69,7 @@ function calculateBookingPrice(pricePerNight, checkIn, checkOut, guests) {
 /**
  * Creates a verified booking with overlap protection.
  */
-async function createBooking({ listingId, userId, checkIn, checkOut, guests, specialRequests = "" }) {
+async function createBooking({ listingId, userId, checkIn, checkOut, guests, specialRequests = "", payment = null }) {
     const listing = await Listing.findById(listingId);
     if (!listing) {
         throw new ExpressError(404, "Listing not found.");
@@ -90,6 +90,12 @@ async function createBooking({ listingId, userId, checkIn, checkOut, guests, spe
 
     const pricing = calculateBookingPrice(listing.price, checkIn, checkOut, guests);
 
+    const paymentData = payment || {
+        method: "demo",
+        status: "paid",
+        paidAt: new Date()
+    };
+
     const booking = new Booking({
         listing: listingId,
         user: userId,
@@ -102,7 +108,8 @@ async function createBooking({ listingId, userId, checkIn, checkOut, guests, spe
         serviceFee: pricing.serviceFee,
         totalPrice: pricing.totalPrice,
         status: "confirmed",
-        specialRequests
+        specialRequests,
+        payment: paymentData
     });
 
     await booking.save();

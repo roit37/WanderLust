@@ -64,6 +64,9 @@
                                 <td><%= r.guests %></td>
                                 <td>
                                     <span class="fw-bold text-dark">&#8377; <%= (r.totalPrice - r.serviceFee).toLocaleString("en-IN") %></span>
+                                    <div class="small text-muted" style="font-size: 0.75rem;">
+                                        <%= (r.payment && r.payment.method === 'razorpay') ? 'Razorpay' : 'Direct' %>
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="badge rounded-pill text-capitalize

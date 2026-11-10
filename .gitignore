@@ -23,3 +23,5 @@ Thumbs.db
 # Uploads & Temp
 /uploads/
 /temp/
+wanderlust-backup/
+.env

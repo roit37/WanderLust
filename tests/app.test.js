@@ -346,6 +346,39 @@ describe("WanderLust Full Integration Test Suite", () => {
             assert.match(res.text, /3 nights/);
         });
 
+        it("should handle Razorpay order initiation endpoint", async () => {
+            const res = await request(app)
+                .post(`/bookings/create-order/${testListingId}`)
+                .set("Cookie", guestCookie)
+                .send({
+                    checkIn: checkInStr,
+                    checkOut: checkOutStr,
+                    guests: 2
+                });
+
+            assert.strictEqual(res.status, 200);
+            assert.strictEqual(res.body.success, true);
+        });
+
+        it("should reject invalid payment verification on /bookings/verify-payment", async () => {
+            const res = await request(app)
+                .post(`/bookings/verify-payment/${testListingId}`)
+                .set("Cookie", guestCookie)
+                .send({
+                    razorpay_order_id: "order_fake_123",
+                    razorpay_payment_id: "pay_fake_456",
+                    razorpay_signature: "invalid_crypto_signature",
+                    booking: {
+                        checkIn: checkInStr,
+                        checkOut: checkOutStr,
+                        guests: 2
+                    }
+                });
+
+            assert.strictEqual(res.status, 400);
+            assert.strictEqual(res.body.success, false);
+        });
+
         it("should successfully create a verified booking for guest", async () => {
             const res = await request(app)
                 .post(`/bookings/create/${testListingId}`)

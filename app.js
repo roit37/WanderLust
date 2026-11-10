@@ -42,7 +42,17 @@ app.use(
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
-                scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+                scriptSrc: [
+                    "'self'",
+                    "'unsafe-inline'",
+                    "https://cdn.jsdelivr.net",
+                    "https://checkout.razorpay.com"
+                ],
+                frameSrc: [
+                    "'self'",
+                    "https://api.razorpay.com",
+                    "https://checkout.razorpay.com"
+                ],
                 styleSrc: [
                     "'self'",
                     "'unsafe-inline'",
@@ -57,9 +67,14 @@ app.use(
                     "blob:",
                     "https://images.unsplash.com",
                     "https://plus.unsplash.com",
-                    "https://res.cloudinary.com"
+                    "https://res.cloudinary.com",
+                    "https://badges.razorpay.com"
                 ],
-                connectSrc: ["'self'"],
+                connectSrc: [
+                    "'self'",
+                    "https://api.razorpay.com",
+                    "https://lumberjack.razorpay.com"
+                ],
                 upgradeInsecureRequests: process.env.NODE_ENV === "production" ? [] : null
             }
         },
