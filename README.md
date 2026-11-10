@@ -1,65 +1,122 @@
-# WanderLust 🌍 | Vacation Rental & Booking Platform
+<div align="center">
 
-[![Node.js Version](https://img.shields.io/badge/Node.js-v18%2B-green.svg)](https://nodejs.org/)
-[![Express Version](https://img.shields.io/badge/Express-5.x-lightgrey.svg)](https://expressjs.com/)
-[![Database](https://img.shields.io/badge/Database-MongoDB%20%2F%20Mongoose-brightgreen.svg)](https://mongoosejs.com/)
-[![Tests Passing](https://img.shields.io/badge/Tests-28%20Passed-success.svg)](https://nodejs.org/api/test.html)
-[![License](https://img.shields.io/badge/License-ISC-blue.svg)](LICENSE)
+# 🌍 WanderLust
 
-**WanderLust** is an Airbnb-inspired vacation rental marketplace built with **Node.js, Express 5, MongoDB, Mongoose, and EJS**. Designed with a production-grade **MVC (Model-View-Controller) architecture**, it delivers an intuitive user experience for travelers, hosts, and platform administrators, complete with real-time booking calculations, verified review badges, role-based authorization, rate limiting, and automated integration testing.
+### *Full-Stack Vacation Rental & Booking Platform*
+
+An Airbnb-inspired full-stack web application designed for discovering, listing, and booking vacation properties worldwide. Built with a production-grade **MVC (Model-View-Controller) architecture**, role-based access control, conflict-free booking logic, verified reviews, and real-time pricing calculations.
 
 ---
 
-## 🌟 Key Highlights & Engineering Features
+### 🚀 **[Explore the Live Demo](https://wanderlust-tklw.onrender.com)** 🚀
 
-### 1. Robust MVC Architecture
-- Modular separation into `config/`, `controllers/`, `models/`, `routes/`, `middleware/`, `services/`, `validators/`, `utils/`, and `views/`.
-- Strict CommonJS standard with async/await patterns and unified error propagation via `catchAsync` and custom `ExpressError`.
+[![Live Website](https://img.shields.io/badge/Live%20Demo-wanderlust--tklw.onrender.com-FF385C?style=for-the-badge&logo=render&logoColor=white)](https://wanderlust-tklw.onrender.com)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/roit37/WanderLust)
 
-### 2. Multi-Role Authentication & Access Control
+<br/>
+
+[![Node.js](https://img.shields.io/badge/Node.js-v18%2B-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-5.x-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
+[![Mongoose](https://img.shields.io/badge/Mongoose-ODM-880000?style=flat-square)](https://mongoosejs.com/)
+[![EJS](https://img.shields.io/badge/EJS-Templates-B4CA65?style=flat-square&logo=ejs&logoColor=white)](https://ejs.co/)
+[![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=flat-square&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
+[![Tests Passing](https://img.shields.io/badge/Tests-28%20Passed-2ea44f?style=flat-square&logo=githubactions&logoColor=white)](https://nodejs.org/api/test.html)
+[![License](https://img.shields.io/badge/License-ISC-blue?style=flat-square)](LICENSE)
+
+</div>
+
+---
+
+## 📑 Table of Contents
+
+- [Overview](#-overview)
+- [Live Demo & Quick Access](#-live-demo--quick-access)
+- [Key Features](#-key-features)
+- [Technology Stack](#-technology-stack)
+- [System Architecture & Folder Structure](#-system-architecture--folder-structure)
+- [Database Schema Design](#-database-schema-design)
+- [Getting Started (Local Development)](#-getting-started-local-development)
+- [Environment Configuration](#-environment-configuration)
+- [MongoDB Atlas Setup Guide](#-mongodb-atlas-setup-guide)
+- [Deployment on Render](#-deployment-on-render)
+- [Pre-Configured Demo Accounts](#-pre-configured-demo-accounts)
+- [Automated Testing](#-automated-testing)
+- [Future Improvements & Roadmap](#-future-improvements--roadmap)
+- [Author & Acknowledgments](#-author--acknowledgments)
+
+---
+
+## 🌟 Overview
+
+**WanderLust** is a feature-rich vacation rental marketplace that connects travelers looking for unique stays with property hosts offering homes, villas, cabins, and beachfront retreats. Built with a focus on real-world software engineering practices, WanderLust demonstrates end-to-end full-stack development using Node.js, Express 5, MongoDB Atlas, and responsive EJS templates styled with Bootstrap 5.
+
+### What Makes This Project Stand Out:
+- **Production-Grade MVC Structure**: Clean separation of routes, controllers, services, models, validators, and middlewares.
+- **Strict Authorization & Role Management**: Multi-tier access for Guests, Hosts, and Platform Administrators.
+- **Double-Booking Prevention**: Date-range overlap detection algorithms running at the database service level.
+- **Verified Review Engine**: Automatically flags reviews with a "Verified Stay" badge when the user has completed a stay at the listing.
+- **Enterprise-Grade Security**: Content Security Policy via Helmet, Express Rate Limiting, payload sanitization against XSS, and encrypted session storage.
+
+---
+
+## 🔗 Live Demo & Quick Access
+
+The application is deployed and running live on Render:
+
+- **🌐 Live URL**: [https://wanderlust-tklw.onrender.com](https://wanderlust-tklw.onrender.com)
+- **💻 Source Code**: [https://github.com/roit37/WanderLust](https://github.com/roit37/WanderLust)
+
+> **Note**: Free cloud tier instances on Render may spin down during inactivity and take 20–40 seconds to handle the initial request.
+
+---
+
+## ✨ Key Features
+
+### 1. Multi-Tier Authentication & Access Control
 - **User Roles**: `Guest`, `Host`, and `Admin`.
-- **Password Security**: Passwords salted and hashed with `bcryptjs`.
-- **Persistent Sessions**: Backed by `connect-mongo` MongoStore with HTTP-only, secure cookies.
-- **Role Middleware**:
-  - `isLoggedIn` & `isLoggedOut` guards with automatic redirection and destination recovery (`returnTo`).
-  - `isListingOwner` for property updates and deletions.
-  - `isReviewAuthor` for review deletions.
-  - `isBookingParty` ensuring only the guest, the property host, or an admin can manage a booking.
-  - `isAdmin` guarding platform metrics, user moderation, and property enforcement.
+- **Password Security**: Strong salt hashing with `bcryptjs` before persisting to database.
+- **Stateful Persistent Sessions**: Managed via `express-session` and persisted in MongoDB using `connect-mongo`.
+- **Protected Middleware Pipeline**:
+  - `isLoggedIn` & `isLoggedOut` guards with intelligent post-login redirect recovery (`returnTo`).
+  - `isHost` verification before accessing property creation tools.
+  - `isListingOwner` preventing unauthorized edits or deletions.
+  - `isBookingParty` restricting reservation access to the booking guest, the host, or an admin.
+  - `isAdmin` safeguarding system moderation panels and global metrics.
 
-### 3. Property Management & Search Engine
-- **Property Schema**: Title, description, cover image, category, nightly price, location, country, guest capacity, bedrooms, bathrooms, and customizable amenities.
-- **Image Pipeline**: Integrated with **Cloudinary** via `multer-storage-cloudinary`, featuring an automatic local/URL fallback mechanism when external cloud credentials are omitted.
-- **Search & Filters**:
-  - Keyword search matching title, location, country, or description.
-  - Filter by category (*Beachfront, Mountains, Iconic Cities, Castles, Amazing Pools, Camping, Domes, Rooms, Luxury, etc.*).
-  - Price range filter (*Min Price & Max Price*).
-  - Guest capacity filtering.
+### 2. Property Management & Dynamic Discovery
+- **Comprehensive Listing Schema**: Title, description, cover image, category, nightly price, location, country, guest capacity, bedrooms, bathrooms, and customizable amenities.
+- **Cloud Image Uploads**: Cloudinary integration with `multer-storage-cloudinary` for cloud media management, paired with automatic local disk storage and external image URL fallback.
+- **Instant Search & Category Filtering**:
+  - Full-text search matching title, location, country, or description.
+  - 12 category chips (*Beachfront, Iconic Cities, Mountains, Castles, Amazing Pools, Camping, Farms, Arctic, Domes, Rooms, Luxury, Trending*).
+  - Price range filter (*Min Price & Max Price*) and guest capacity filtering.
   - Sorting by newest, price (low-to-high, high-to-low), and top customer ratings.
   - Server-side pagination with dynamic page controls.
 
-### 4. Conflict-Free Booking Engine
-- **Overlapping Availability Check**: Queries existing confirmed and pending reservations to prevent double-bookings.
-- **Server-Side Price Calculation**:
-  - Automatically calculates stay duration in nights.
-  - Applies fixed cleaning fee (₹500) and service fee (5%).
-  - Prevents hosts from booking their own spaces.
-- **Client-Side Live Preview**: Instant client-side updates of night count and total cost on the property detail page when dates are selected.
-- **Status Lifecycle**: `pending` → `confirmed` → `completed` / `cancelled`.
+### 3. Conflict-Free Booking Engine
+- **Availability & Date-Overlap Guard**: Detects and rejects conflicting booking dates (`[checkIn, checkOut)`) against existing confirmed reservations.
+- **Self-Booking Protection**: Prevents hosts from reserving their own properties.
+- **Dynamic Pricing Engine**:
+  - Computes stay duration in nights.
+  - Automatically calculates accommodation cost, cleaning fee (₹500), and platform service fee (5%).
+  - Client-side interactive booking widget with live price recalculation on date change.
+- **Reservation Lifecycle**: `pending` → `confirmed` → `completed` / `cancelled`.
 
-### 5. Verified Reviews & Star Ratings
-- 1 to 5 star rating submission with written feedback.
+### 4. Verified Reviews & Ratings
+- 1-to-5 star rating submission with written feedback.
 - **Verified Guest Badge**: Cross-references booking history so travelers who completed stays at the property receive a "Verified Stay" badge on their review.
-- Dynamic recalculation of average ratings (`avgRating`) and total review counts on creation and deletion.
-- Cascade deletion: Removing a property automatically purges all associated reviews via Mongoose post-delete hooks.
+- Automated average rating (`avgRating`) and total review counter recalculation.
+- Cascade deletion: Removing a listing automatically purges all related review documents.
 
-### 6. User Wishlists & Multi-Tier Dashboards
-- **Guest Dashboard**: Profile view, upcoming trip counters, saved wishlist, trip histories, and 1-click upgrade to Host.
-- **Host Dashboard**: Property performance overview, gross payout statistics, listed properties management, and incoming guest reservations with status actions.
-- **Admin Panel**: Platform KPIs (Users, Listings, Bookings, Platform Volume), user role modification, user deletion, and content moderation.
+### 5. Multi-User Dashboards & Wishlists
+- **Guest Dashboard**: Profile details, active/upcoming trip counters, past trip receipts, and 1-click upgrade to Host role.
+- **Host Dashboard**: Property performance overview, gross payout statistics, listed properties management, and incoming guest reservations with status actions (*Confirm, Complete, Decline*).
+- **Admin Panel**: Platform KPIs (total users, listings, bookings, platform volume), user role switching, user deletion, and content moderation.
+- **User Wishlist**: 1-click toggle to save favorite stays and review them from a dedicated wishlist view.
 
-### 7. Hardened Security & Performance
-- **Helmet**: Customized Content Security Policy (CSP) whitelisting Bootstrap CDN, FontAwesome, Google Fonts, and image CDNs (Unsplash, Cloudinary).
+### 6. Security Hardening
+- **Helmet**: Customized Content Security Policy (CSP) whitelisting Bootstrap CDN, FontAwesome, Google Fonts, and CDNs (Unsplash, Cloudinary).
 - **Rate Limiting**: `express-rate-limit` protecting against brute-force authentication and general DDoS attempts.
 - **XSS Protection**: HTML sanitization on body payloads via `sanitize-html`.
 - **Method Override**: Enables RESTful `PUT` and `DELETE` requests from HTML forms.
@@ -67,29 +124,50 @@
 
 ---
 
-## 🏗️ Directory Structure
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+| :--- | :--- |
+| **Backend Runtime** | [Node.js](https://nodejs.org/) (v18+) |
+| **Web Framework** | [Express.js 5](https://expressjs.com/) (RESTful routing, CommonJS) |
+| **Database & ODM** | [MongoDB Atlas](https://www.mongodb.com/atlas) & [Mongoose 9](https://mongoosejs.com/) |
+| **Templating Engine** | [EJS](https://ejs.co/) & [EJS-Mate](https://github.com/JacksonTian/ejs-mate) (Reusable layouts & boilerplate) |
+| **Frontend Styling** | [Bootstrap 5.3](https://getbootstrap.com/), Custom CSS3, [Font Awesome 6.6](https://fontawesome.com/) |
+| **Client-Side Scripting** | Vanilla JavaScript (ES6+, dynamic price calculations, form validation) |
+| **Authentication & Security** | [bcryptjs](https://github.com/dcodeIO/bcrypt.js), [Helmet](https://helmetjs.github.io/), [express-rate-limit](https://github.com/express-rate-limit/express-rate-limit), [sanitize-html](https://github.com/apostrophecms/sanitize-html) |
+| **Session Management** | [express-session](https://github.com/expressjs/session), [connect-mongo](https://github.com/jdesboeufs/connect-mongo), [connect-flash](https://github.com/jaredhanson/connect-flash) |
+| **File Uploads** | [Multer](https://github.com/expressjs/multer), [Cloudinary](https://cloudinary.com/), `multer-storage-cloudinary` |
+| **Validation** | [Joi](https://joi.dev/) (Server-side schema validation) |
+| **Testing** | Node.js Test Runner (`node:test`), [Supertest](https://github.com/ladjs/supertest) |
+| **Hosting & Cloud** | [Render](https://render.com/) (Web Service), MongoDB Atlas (Database) |
+
+---
+
+## 🏛️ System Architecture & Folder Structure
+
+WanderLust strictly implements the **Model-View-Controller (MVC)** architectural pattern:
 
 ```text
 MAJORPROJECT/
 ├── config/
-│   ├── db.js                 # MongoDB connection handler
-│   ├── cloudinary.js         # Cloudinary & multer storage with fallback
-│   └── session.js            # Express session & MongoStore configuration
+│   ├── db.js                 # MongoDB Atlas connection handler
+│   ├── cloudinary.js         # Cloudinary configuration & Multer storage fallback
+│   └── session.js            # Express session & connect-mongo store setup
 ├── controllers/
-│   ├── listings.js           # Property CRUD, image uploads, search
+│   ├── listings.js           # Property CRUD, image handling, search & filter
 │   ├── bookings.js           # Reservation lifecycle, guest & host trips
-│   ├── reviews.js            # Review CRUD & verified stay verification
+│   ├── reviews.js            # Review creation, verified check & avg rating
 │   ├── users.js              # Register, login, logout, profile update
 │   ├── dashboards.js         # Guest, Host, and Admin dashboard views
-│   └── wishlists.js          # User saved properties toggle
+│   └── wishlists.js          # Saved properties toggle & wishlist view
 ├── middleware/
-│   ├── auth.js               # isLoggedIn, isHost, isAdmin, isOwner, etc.
-│   ├── validate.js           # Joi schema validation middleware
+│   ├── auth.js               # isLoggedIn, isHost, isAdmin, isListingOwner, etc.
+│   ├── validate.js           # Joi payload validation middleware
 │   ├── sanitize.js           # Input sanitization against XSS
-│   ├── rateLimiter.js        # Express rate limiters
-│   └── errorHandler.js       # 404 and global error handler
+│   ├── rateLimiter.js        # Express rate limiters (general & auth)
+│   └── errorHandler.js       # Centralized 404 & global error handling
 ├── models/
-│   ├── user.js               # User schema with bcrypt hashing & wishlist
+│   ├── user.js               # User schema with bcrypt hashing & roles
 │   ├── listing.js            # Property schema with cascade delete hook
 │   ├── booking.js            # Booking schema with indexed overlap checks
 │   └── review.js             # Review schema with verifiedBooking flag
@@ -101,8 +179,8 @@ MAJORPROJECT/
 │   ├── dashboards.js         # /dashboard/guest, /host, /admin
 │   └── wishlists.js          # /wishlist endpoints
 ├── services/
-│   ├── bookingService.js     # Overlap checking & price calculation
-│   └── listingService.js     # Query builder, filters & pagination
+│   ├── bookingService.js     # Overlap checking & price calculation logic
+│   └── listingService.js     # Query builder, filters, sorting & pagination
 ├── utils/
 │   ├── ExpressError.js       # Custom operational error class
 │   ├── catchAsync.js         # Async error wrapper
@@ -123,82 +201,232 @@ MAJORPROJECT/
 │   ├── css/style.css         # Modern styling & responsive design
 │   └── js/main.js            # Real-time booking calculator & validation
 ├── init/
-│   ├── data.js               # Sample categorized properties
-│   └── index.js              # Database seed script
+│   ├── data.js               # Seed property data with categories & amenities
+│   └── index.js              # Database seed script (Admin, Host, Guest, Listings)
 ├── tests/
 │   └── app.test.js           # 28 Integration test cases
-├── .env.example              # Environment variable documentation
-├── .gitignore                # Production ignore patterns
+├── .env.example              # Environment variable documentation template
+├── .gitignore                # Protects secrets & node_modules
 ├── app.js                    # Server entrypoint
-└── package.json
+└── package.json              # Project dependencies & scripts
 ```
 
 ---
 
-## ⚡ Quick Start & Installation
+## 🗄️ Database Schema Design
+
+```mermaid
+erDiagram
+    User ||--o{ Listing : "owns"
+    User ||--o{ Booking : "books"
+    User ||--o{ Review : "writes"
+    User }o--o{ Listing : "wishlists"
+    Listing ||--o{ Booking : "has"
+    Listing ||--o{ Review : "receives"
+
+    User {
+        ObjectId _id PK
+        string name
+        string email UK
+        string username UK
+        string password "bcrypt hash"
+        string role "guest | host | admin"
+        string bio
+        ObjectId[] wishlist FK
+        date createdAt
+    }
+
+    Listing {
+        ObjectId _id PK
+        string title
+        string description
+        string category
+        number price
+        string location
+        string country
+        number maxGuests
+        number bedrooms
+        number bathrooms
+        string[] amenities
+        ObjectId owner FK
+        ObjectId[] reviews FK
+        number avgRating
+        number totalReviews
+        date createdAt
+    }
+
+    Booking {
+        ObjectId _id PK
+        ObjectId listing FK
+        ObjectId user FK
+        date checkIn
+        date checkOut
+        number guests
+        number nights
+        number pricePerNight
+        number cleaningFee
+        number serviceFee
+        number totalPrice
+        string status "pending | confirmed | cancelled | completed"
+        string specialRequests
+        date createdAt
+    }
+
+    Review {
+        ObjectId _id PK
+        number rating "1 to 5"
+        string comment
+        ObjectId author FK
+        ObjectId listing FK
+        boolean verifiedBooking
+        date createdAt
+    }
+```
+
+---
+
+## 💻 Getting Started (Local Development)
+
+Follow these step-by-step instructions to get a local copy up and running on your machine.
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- [MongoDB](https://www.mongodb.com/) (Local instance running at `mongodb://127.0.0.1:27017` or MongoDB Atlas URI)
+- **Node.js**: v18.x or higher ([Download Node.js](https://nodejs.org/))
+- **MongoDB**: Local MongoDB community server running on port `27017` **OR** a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster
+- **Git**: Installed on your system
 
-### 1. Clone & Install Dependencies
+### 1. Clone the Repository
 ```bash
-cd MAJORPROJECT
+git clone https://github.com/roit37/WanderLust.git
+cd WanderLust
+```
+
+### 2. Install Dependencies
+```bash
 npm install
 ```
 
-### 2. Configure Environment Variables
-Copy `.env.example` to `.env`:
+### 3. Setup Environment Variables
+Create your local `.env` file from the provided template:
 ```bash
 cp .env.example .env
 ```
+*(Open `.env` in your text editor and adjust the values as outlined in the next section).*
 
-Ensure `.env` contains valid configuration:
+### 4. Seed the Database
+Populate your database with sample listings, categories, verified reviews, and demo users:
+```bash
+npm run seed
+```
+
+### 5. Start the Application
+```bash
+npm start
+```
+Open your browser and navigate to:
+```
+http://localhost:8080
+```
+
+---
+
+## 🔐 Environment Configuration
+
+Never commit your actual `.env` file or secrets to version control. Use the provided `.env.example` as a reference:
+
 ```env
+# Server Configuration
 PORT=8080
 NODE_ENV=development
+
+# Database Configuration (Local MongoDB or MongoDB Atlas)
+# Local: mongodb://127.0.0.1:27017/wanderlust
+# Atlas: mongodb+srv://<username>:<password>@cluster0.mongodb.net/wanderlust?retryWrites=true&w=majority
 MONGODB_URI=mongodb://127.0.0.1:27017/wanderlust
-SESSION_SECRET=your_secure_random_session_secret_string
 
-# Cloudinary (Optional: omit to use local disk storage / direct image URLs)
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
+# Session Secret (Use a strong random string in production)
+SESSION_SECRET=your_super_secret_session_key_here
 
-# Seed Credentials
+# Cloudinary Storage Configuration (Optional - fallback to local storage if omitted)
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+# Default Admin Seed Credentials (used during database seeding)
 ADMIN_NAME=Platform Administrator
 ADMIN_EMAIL=admin@wanderlust.com
 ADMIN_PASSWORD=Admin@123456
 ADMIN_USERNAME=admin
+
+# Default Demo Host & Guest Seed Credentials
 HOST_EMAIL=host@wanderlust.com
 HOST_PASSWORD=Host@123456
 GUEST_EMAIL=guest@wanderlust.com
 GUEST_PASSWORD=Guest@123456
 ```
 
-### 3. Seed Database with Demo Data
-Populate the database with categorized listings, demo accounts, sample verified reviews, and bookings:
-```bash
-npm run seed
-```
+---
 
-### 4. Start the Application
-```bash
-npm start
-```
-Open your browser and navigate to **`http://localhost:8080`**.
+## ☁️ MongoDB Atlas Setup Guide
+
+To connect the application to a cloud-hosted MongoDB Atlas database:
+
+1. **Create an Account**: Sign up at [MongoDB Atlas](https://www.mongodb.com/atlas).
+2. **Build a Database Cluster**: Select the **Shared (M0 Free)** tier and choose your preferred cloud provider and region.
+3. **Create Database User**:
+   - Go to **Database Access** → **Add New Database User**.
+   - Choose **Password** authentication.
+   - Enter a username and secure password (e.g., `wanderlust_user`).
+   - Grant **Read and write to any database** permissions.
+4. **Configure Network Access**:
+   - Go to **Network Access** → **Add IP Address**.
+   - For local development and Render deployment, select **Allow Access from Anywhere** (`0.0.0.0/0`).
+5. **Retrieve Connection String**:
+   - In the **Database Deployments** screen, click **Connect** on your cluster.
+   - Choose **Drivers** (Node.js).
+   - Copy the connection string format:
+     ```text
+     mongodb+srv://<username>:<password>@cluster0.mongodb.net/wanderlust?retryWrites=true&w=majority
+     ```
+   - Replace `<username>` and `<password>` with your created database credentials.
+6. **Set `MONGODB_URI`**: Paste the connection string into your `.env` file locally or inside the Render Environment settings.
 
 ---
 
-## 🔑 Pre-Configured Demo Accounts
+## 🚢 Deployment on Render
 
-For instant testing and presentation, the seed script sets up three pre-configured accounts:
+This project is deployed as a Web Service on **Render** connected to **MongoDB Atlas**.
 
-| Role | Email | Password | Username |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@wanderlust.com` | `Admin@123456` | `admin` |
-| **Host** | `host@wanderlust.com` | `Host@123456` | `sarah_superhost` |
-| **Guest** | `guest@wanderlust.com` | `Guest@123456` | `alex_traveler` |
+### Steps to Deploy:
+1. **Push Code to GitHub**: Ensure your repository is up to date on GitHub (`https://github.com/roit37/WanderLust`).
+2. **Create New Web Service on Render**:
+   - Log into [Render](https://render.com/) and click **New +** → **Web Service**.
+   - Connect your GitHub repository: `roit37/WanderLust`.
+3. **Configure Build & Runtime Settings**:
+   - **Environment**: `Node`
+   - **Branch**: `main`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+4. **Add Environment Variables in Render Dashboard**:
+   - `NODE_ENV`: `production`
+   - `PORT`: `10000` *(Render sets this automatically, but application reads `process.env.PORT`)*
+   - `MONGODB_URI`: `<Your MongoDB Atlas connection URI>`
+   - `SESSION_SECRET`: `<A long random cryptographically secure string>`
+   - `CLOUDINARY_CLOUD_NAME`: *(Optional - your Cloudinary name)*
+   - `CLOUDINARY_API_KEY`: *(Optional - your Cloudinary API key)*
+   - `CLOUDINARY_API_SECRET`: *(Optional - your Cloudinary secret)*
+5. **Deploy**: Click **Create Web Service**. Render builds the project, runs migrations, and serves the application live.
+
+---
+
+## 👥 Pre-Configured Demo Accounts
+
+For quick evaluation without manual sign-up, the database seed script provides three ready-to-use demo accounts:
+
+| Role | Email | Password | Username | Platform Permissions |
+| :--- | :--- | :--- | :--- | :--- |
+| **Admin** | `admin@wanderlust.com` | `Admin@123456` | `admin` | Full platform control, moderation, user role toggling |
+| **Host** | `host@wanderlust.com` | `Host@123456` | `sarah_superhost` | Owns 16 seed properties, manages guest reservations |
+| **Guest** | `guest@wanderlust.com` | `Guest@123456` | `alex_traveler` | Has pre-booked stays, wishlist items, and verified reviews |
 
 > 💡 **Tip**: The login page (`/login`) includes **1-Click Demo Login** buttons to automatically sign in as any of the roles above without typing credentials.
 
@@ -206,18 +434,18 @@ For instant testing and presentation, the seed script sets up three pre-configur
 
 ## 🧪 Automated Testing
 
-WanderLust features an end-to-end integration test suite built with Node's native test runner (`node:test`) and `supertest`.
+WanderLust includes an integration test suite built with Node's native test runner (`node:test`) and `supertest`.
 
-To execute the test suite:
+### Run the Test Suite:
 ```bash
 npm test
 ```
 
-### Test Coverage (28 Passing Tests):
-- **Public Routes & Navigation**: Root redirects, listing catalog rendering, public pages.
-- **Authentication**: Registration, duplicate prevention, password hashing, valid/invalid logins, session retention.
-- **Property Management**: Unauthenticated creation block, guest role block, host creation, ownership modification protection, owner updates.
-- **Search & Filter**: Keyword search, category filtering, capacity verification.
+### Test Coverage Highlights (28 Passing Tests):
+- **Public Navigation**: Root redirects, listing catalog rendering, static information pages.
+- **Authentication**: Registration, duplicate rejection, password hashing, login authorization, session persistence.
+- **Property Management**: Unauthenticated creation block, guest role block, host creation, ownership update/delete enforcement.
+- **Search & Filtering**: Keyword search, category filtering, capacity verification.
 - **Booking Engine**: Checkout preview, valid reservation creation, **conflict rejection on identical dates**, self-booking prevention, guest and host trip lists.
 - **Reviews**: Verified stay flag validation, rating calculation, unauthorized deletion prevention, author deletion.
 - **Wishlist**: Toggle favorites, view saved properties.
@@ -225,35 +453,27 @@ npm test
 
 ---
 
-## 🚀 Deployment Instructions
+## 🗺️ Future Improvements & Roadmap
 
-### Deploying to Cloud Providers (e.g., Render, Railway, Heroku)
-
-1. **Set up MongoDB Atlas**:
-   - Create a free cluster at [MongoDB Atlas](https://www.mongodb.com/atlas).
-   - Create a database user and whitelist network access (`0.0.0.0/0`).
-   - Copy your connection string (`mongodb+srv://...`).
-
-2. **Configure Cloud Environment Variables**:
-   Set the following variables in your hosting provider's dashboard:
-   - `NODE_ENV`: `production`
-   - `PORT`: `8080` (or provider's default `$PORT`)
-   - `MONGODB_URI`: `<Your MongoDB Atlas connection URI>`
-   - `SESSION_SECRET`: `<A long cryptographically random string>`
-   - `CLOUDINARY_CLOUD_NAME`: `<Your Cloudinary cloud name>`
-   - `CLOUDINARY_API_KEY`: `<Your Cloudinary API key>`
-   - `CLOUDINARY_API_SECRET`: `<Your Cloudinary API secret>`
-
-3. **Build & Start Commands**:
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm start`
-   - (Optional) **Release / Pre-deploy Command**: `npm run seed` to seed initial data.
+- [ ] **Interactive Maps**: Integrate Mapbox GL JS / Leaflet for dynamic property map pinning and location search.
+- [ ] **Payment Gateway**: Integrate Stripe or Razorpay for real-time checkout and payment processing.
+- [ ] **OAuth Authentication**: Add "Sign in with Google" and "Sign in with GitHub" via Passport.js strategies.
+- [ ] **Automated Email Notifications**: Transactional booking confirmation and cancellation emails using Nodemailer or SendGrid.
+- [ ] **Multi-Image Uploads**: Allow hosts to upload photo galleries (up to 10 images) per property.
+- [ ] **Direct Messaging**: In-app messaging between guests and hosts regarding reservation details.
 
 ---
 
-## 🛡️ License
+## 👨‍💻 Author & Acknowledgments
 
-This project is licensed under the ISC License. Free to use for educational, demonstration, and personal portfolio purposes.
-=======
-# WanderLust
->>>>>>> 06df758754153e26e9db9eced5adb3e05af4d718
+**Rohit Kumar Mahato**
+
+- **GitHub**: [@roit37](https://github.com/roit37)
+- **Project Repository**: [https://github.com/roit37/WanderLust](https://github.com/roit37/WanderLust)
+- **Live Deployment**: [https://wanderlust-tklw.onrender.com](https://wanderlust-tklw.onrender.com)
+
+---
+
+## 📄 License
+
+This project is licensed under the **ISC License**. Feel free to use this project for learning, portfolio display, and software engineering interviews.
