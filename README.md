@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # WanderLust 🌍 | Vacation Rental & Booking Platform
 
 [![Node.js Version](https://img.shields.io/badge/Node.js-v18%2B-green.svg)](https://nodejs.org/)
