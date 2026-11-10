@@ -1,0 +1,77 @@
+<%- layout("/layouts/boilerplate") %>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5">
+            <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-danger-subtle text-danger rounded-circle p-3 mb-2">
+                        <i class="fa-solid fa-compass fs-2"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Create an Account</h3>
+                    <p class="text-muted small">Join WanderLust to discover unique stays or host your space.</p>
+                </div>
+
+                <form action="/register" method="POST" class="needs-validation" novalidate>
+                    <!-- Full Name -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-semibold small">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" id="name" class="form-control rounded-3" placeholder="Jane Doe" required minlength="2">
+                        <div class="invalid-feedback">Please enter your full name.</div>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label fw-semibold small">Username <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text rounded-start-3">@</span>
+                            <input type="text" name="username" id="username" class="form-control rounded-end-3" placeholder="janedoe" required pattern="^[a-zA-Z0-9_]{3,30}$">
+                            <div class="invalid-feedback">Username must be 3-30 letters/numbers.</div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold small">Email Address <span class="text-danger">*</span></label>
+                        <input type="email" name="email" id="email" class="form-control rounded-3" placeholder="jane@example.com" required>
+                        <div class="invalid-feedback">Please provide a valid email.</div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label fw-semibold small">Password <span class="text-danger">*</span></label>
+                        <input type="password" name="password" id="password" class="form-control rounded-3" placeholder="At least 6 characters" required minlength="6">
+                        <div class="invalid-feedback">Password must be at least 6 characters long.</div>
+                    </div>
+
+                    <!-- Account Purpose / Role -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small">I want to:</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check flex-fill p-2 border rounded-3 text-center">
+                                <input class="form-check-input float-none me-1" type="radio" name="role" id="roleGuest" value="guest" checked>
+                                <label class="form-check-label small fw-semibold" for="roleGuest">
+                                    <i class="fa-solid fa-suitcase me-1 text-primary"></i> Travel / Book Stays
+                                </label>
+                            </div>
+                            <div class="form-check flex-fill p-2 border rounded-3 text-center">
+                                <input class="form-check-input float-none me-1" type="radio" name="role" id="roleHost" value="host">
+                                <label class="form-check-label small fw-semibold" for="roleHost">
+                                    <i class="fa-solid fa-house-chimney me-1 text-danger"></i> Host Properties
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn brand-btn w-100 py-2 rounded-pill text-white fw-bold shadow-sm mb-3">
+                        Sign up with Email
+                    </button>
+
+                    <div class="text-center small text-muted">
+                        Already have an account? <a href="/login" class="fw-bold text-dark text-decoration-none">Log in</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

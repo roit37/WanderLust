@@ -1,0 +1,89 @@
+<%- layout("/layouts/boilerplate") %>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="rounded-circle bg-danger bg-opacity-10 p-3 text-danger fs-3">
+                    <i class="fa-solid fa-sitemap"></i>
+                </div>
+                <div>
+                    <h2 class="fw-bold mb-1">WanderLust Sitemap</h2>
+                    <p class="text-muted mb-0">Overview of all pages, categories, and services available on WanderLust.</p>
+                </div>
+            </div>
+
+            <hr class="mb-5">
+
+            <div class="row g-4">
+                <!-- 1. Explore & Destinations -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                        <h5 class="fw-bold mb-3 d-flex align-items-center text-dark">
+                            <i class="fa-solid fa-compass text-danger me-2"></i> Explore & Stay
+                        </h5>
+                        <ul class="list-unstyled lh-lg mb-0">
+                            <li><a href="/listings" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> All Listings</a></li>
+                            <li><a href="/listings?category=Beachfront" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Beachfront Escapes</a></li>
+                            <li><a href="/listings?category=Mountains" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Mountain Retreats</a></li>
+                            <li><a href="/listings?category=Iconic%20Cities" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Iconic Cities</a></li>
+                            <li><a href="/listings?category=Amazing%20Pools" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Amazing Pools</a></li>
+                            <li><a href="/listings?category=Castles" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Historic Castles</a></li>
+                            <li><a href="/listings?category=Luxury" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Luxury Villas</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 2. Account & Bookings -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                        <h5 class="fw-bold mb-3 d-flex align-items-center text-dark">
+                            <i class="fa-solid fa-user text-danger me-2"></i> Account & Trips
+                        </h5>
+                        <ul class="list-unstyled lh-lg mb-0">
+                            <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+                                <li><a href="/profile" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Profile Settings</a></li>
+                                <li><a href="/wishlist" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Saved Wishlist</a></li>
+                                <li><a href="/bookings/my-trips" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> My Trips & Bookings</a></li>
+                                <li><a href="/dashboard/guest" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Guest Dashboard</a></li>
+                                <li><a href="/logout" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Sign Out</a></li>
+                            <% } else { %>
+                                <li><a href="/login" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Sign In / Login</a></li>
+                                <li><a href="/register" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Create Account</a></li>
+                                <li><a href="/wishlist" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Wishlist</a></li>
+                            <% } %>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 3. Hosting on WanderLust -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                        <h5 class="fw-bold mb-3 d-flex align-items-center text-dark">
+                            <i class="fa-solid fa-house-chimney text-danger me-2"></i> Hosting
+                        </h5>
+                        <ul class="list-unstyled lh-lg mb-0">
+                            <li><a href="/listings/new" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> List Your Home</a></li>
+                            <li><a href="/dashboard/host" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Host Dashboard</a></li>
+                            <li><a href="/bookings/host-reservations" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Host Reservations</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 4. Legal & Corporate -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                        <h5 class="fw-bold mb-3 d-flex align-items-center text-dark">
+                            <i class="fa-solid fa-building text-danger me-2"></i> Legal & Corporate
+                        </h5>
+                        <ul class="list-unstyled lh-lg mb-0">
+                            <li><a href="/company" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Company Details</a></li>
+                            <li><a href="/privacy" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Privacy Policy</a></li>
+                            <li><a href="/terms" class="text-decoration-none text-secondary hover-dark"><i class="fa-solid fa-angle-right me-2 text-muted small"></i> Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

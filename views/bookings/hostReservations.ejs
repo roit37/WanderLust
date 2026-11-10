@@ -1,0 +1,108 @@
+<%- layout("/layouts/boilerplate") %>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1">Host Reservations Management</h2>
+            <p class="text-muted small mb-0">Track and manage reservations placed by guests across your properties.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/dashboard/host" class="btn btn-outline-dark rounded-pill px-3">
+                <i class="fa-solid fa-chart-line me-1"></i> Host Dashboard
+            </a>
+            <a href="/listings/new" class="btn brand-btn text-white rounded-pill px-3 fw-semibold">
+                <i class="fa-solid fa-plus me-1"></i> Add Property
+            </a>
+        </div>
+    </div>
+
+    <% if (reservations && reservations.length > 0) { %>
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Property</th>
+                            <th>Guest</th>
+                            <th>Dates</th>
+                            <th>Guests</th>
+                            <th>Payout</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let r of reservations) { %>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <img 
+                                            src="<%= r.listing && r.listing.image && r.listing.image.url ? r.listing.image.url : '' %>" 
+                                            alt="<%= r.listing ? r.listing.title : '' %>" 
+                                            class="rounded-3" 
+                                            style="width: 50px; height: 40px; object-fit: cover;"
+                                        >
+                                        <div>
+                                            <a href="/listings/<%= r.listing ? r.listing._id : '' %>" class="text-dark fw-bold text-decoration-none d-block text-truncate" style="max-width: 220px;">
+                                                <%= r.listing ? r.listing.title : 'Property Deleted' %>
+                                            </a>
+                                            <span class="small text-muted"><%= r.listing ? r.listing.location : '' %></span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold"><%= r.user ? r.user.name : 'Guest' %></div>
+                                    <div class="small text-muted"><%= r.user ? r.user.email : '' %></div>
+                                </td>
+                                <td>
+                                    <div class="small fw-semibold">
+                                        <%= new Date(r.checkIn).toLocaleDateString("en-US", { month: "short", day: "numeric" }) %> – 
+                                        <%= new Date(r.checkOut).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
+                                    </div>
+                                    <div class="small text-muted"><%= r.nights %> nights</div>
+                                </td>
+                                <td><%= r.guests %></td>
+                                <td>
+                                    <span class="fw-bold text-dark">&#8377; <%= (r.totalPrice - r.serviceFee).toLocaleString("en-IN") %></span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill text-capitalize
+                                        <%= r.status === 'confirmed' ? 'bg-success' : (r.status === 'completed' ? 'bg-primary' : 'bg-secondary') %>">
+                                        <%= r.status %>
+                                    </span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group">
+                                        <% if (r.status === 'confirmed') { %>
+                                            <form action="/bookings/<%= r._id %>/status" method="POST" class="d-inline">
+                                                <input type="hidden" name="status" value="completed">
+                                                <button type="submit" class="btn btn-sm btn-outline-success rounded-pill me-1" title="Mark Completed">
+                                                    <i class="fa-solid fa-check"></i> Complete
+                                                </button>
+                                            </form>
+                                            <form action="/bookings/<%= r._id %>/cancel" method="POST" class="d-inline" onsubmit="return confirm('Decline this reservation?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" title="Decline Reservation">
+                                                    <i class="fa-solid fa-xmark"></i> Decline
+                                                </button>
+                                            </form>
+                                        <% } else { %>
+                                            <span class="text-muted small fst-italic">No action</span>
+                                        <% } %>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="card border-0 bg-light rounded-4 text-center py-5 my-4">
+            <div class="mb-3">
+                <i class="fa-solid fa-calendar-check text-muted display-4"></i>
+            </div>
+            <h4 class="fw-bold">No reservations yet</h4>
+            <p class="text-muted mb-0">When travelers book your listings, your reservations will appear here.</p>
+        </div>
+    <% } %>
+</div>

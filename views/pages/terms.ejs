@@ -1,0 +1,22 @@
+<%- layout("/layouts/boilerplate") %>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <h2 class="fw-bold mb-3">Terms of Service</h2>
+            <p class="text-muted">Last updated: <%= new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" }) %></p>
+            <hr class="mb-4">
+
+            <div class="lh-lg text-secondary">
+                <h5 class="fw-bold text-dark">1. Acceptance of Terms</h5>
+                <p>By accessing and using WanderLust, you agree to comply with and be bound by these Terms of Service.</p>
+
+                <h5 class="fw-bold text-dark mt-4">2. Host and Guest Responsibilities</h5>
+                <p>Hosts are responsible for maintaining accurate listings, availability calendars, and honoring confirmed bookings. Guests agree to follow property house rules and treat properties with care.</p>
+
+                <h5 class="fw-bold text-dark mt-4">3. Bookings and Cancellations</h5>
+                <p>Reservations are subject to the property cancellation policy indicated at checkout. Overlapping conflicting reservations are strictly prevented by platform availability controls.</p>
+            </div>
+        </div>
+    </div>
+</div>

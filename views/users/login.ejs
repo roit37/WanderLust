@@ -1,0 +1,67 @@
+<%- layout("/layouts/boilerplate") %>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5">
+            <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-danger-subtle text-danger rounded-circle p-3 mb-2">
+                        <i class="fa-solid fa-compass fs-2"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Welcome Back</h3>
+                    <p class="text-muted small">Log in to manage your bookings, wishlist, or host listings.</p>
+                </div>
+
+                <form action="/login" method="POST" id="loginForm" class="needs-validation" novalidate>
+                    <!-- Username or Email -->
+                    <div class="mb-3">
+                        <label for="usernameOrEmail" class="form-label fw-semibold small">Username or Email</label>
+                        <input type="text" name="usernameOrEmail" id="usernameOrEmail" class="form-control rounded-3" placeholder="username or email@example.com" required>
+                        <div class="invalid-feedback">Please enter your username or email.</div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-semibold small">Password</label>
+                        <input type="password" name="password" id="password" class="form-control rounded-3" placeholder="Enter your password" required>
+                        <div class="invalid-feedback">Please enter your password.</div>
+                    </div>
+
+                    <button type="submit" class="btn brand-btn w-100 py-2 rounded-pill text-white fw-bold shadow-sm mb-3">
+                        Log In
+                    </button>
+
+                    <div class="text-center small text-muted mb-4">
+                        Don't have an account? <a href="/register" class="fw-bold text-dark text-decoration-none">Sign up</a>
+                    </div>
+                </form>
+
+                <!-- Quick Demo Login Helpers -->
+                <div class="border-top pt-3">
+                    <div class="text-muted small fw-bold text-uppercase text-center mb-2" style="font-size: 0.75rem;">
+                        Quick Demo 1-Click Login
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill py-2 d-flex align-items-center justify-content-center gap-2" onclick="fillDemo('guest@wanderlust.com', 'Guest@123456')">
+                            <i class="fa-solid fa-user text-primary"></i> Login as <strong>Demo Guest</strong>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill py-2 d-flex align-items-center justify-content-center gap-2" onclick="fillDemo('host@wanderlust.com', 'Host@123456')">
+                            <i class="fa-solid fa-house-chimney text-danger"></i> Login as <strong>Demo Host</strong>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill py-2 d-flex align-items-center justify-content-center gap-2" onclick="fillDemo('admin@wanderlust.com', 'Admin@123456')">
+                            <i class="fa-solid fa-shield-halved text-success"></i> Login as <strong>Demo Admin</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function fillDemo(usernameOrEmail, password) {
+        document.getElementById('usernameOrEmail').value = usernameOrEmail;
+        document.getElementById('password').value = password;
+        document.getElementById('loginForm').submit();
+    }
+</script>

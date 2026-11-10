@@ -1,0 +1,90 @@
+<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top py-2 main-navbar">
+    <div class="container">
+        <!-- Brand Logo -->
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/listings">
+            <i class="fa-solid fa-compass brand-icon"></i>
+            <span class="brand-text">WanderLust</span>
+        </a>
+
+        <!-- Mobile Toggler -->
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Global Search Bar in Navbar -->
+            <form class="d-flex mx-auto my-2 my-lg-0 navbar-search-form" action="/listings" method="GET" role="search">
+                <div class="input-group search-input-group">
+                    <input class="form-control border-0 bg-transparent ps-3" type="search" name="q" placeholder="Anywhere  •  Any week  •  Add guests" aria-label="Search destinations" value="<%= typeof filters !== 'undefined' && filters.q ? filters.q : '' %>">
+                    <button class="btn search-btn rounded-circle" type="submit" aria-label="Search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Right-side Actions & User Menu -->
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+                    <% if (currentUser.role === 'host' || currentUser.role === 'admin') { %>
+                        <li class="nav-item">
+                            <a class="nav-link host-nav-pill fw-semibold text-dark px-3 py-2 rounded-pill" href="/listings/new">
+                                <i class="fa-solid fa-plus me-1 text-danger"></i> Add Property
+                            </a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link host-nav-pill fw-semibold text-dark px-3 py-2 rounded-pill" href="/dashboard/guest">
+                                Switch to hosting
+                            </a>
+                        </li>
+                    <% } %>
+
+                    <!-- User Profile Dropdown -->
+                    <li class="nav-item dropdown">
+                        <button class="btn user-menu-btn d-flex align-items-center gap-2 rounded-pill border py-1 px-2" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-bars fs-6 text-muted ms-1"></i>
+                            <img src="<%= currentUser.avatar && currentUser.avatar.url ? currentUser.avatar.url : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80' %>" alt="<%= currentUser.name %>" class="rounded-circle user-avatar-thumb">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 py-2 mt-2" aria-labelledby="userMenuDropdown">
+                            <li class="px-3 py-2 border-bottom">
+                                <div class="fw-bold text-truncate"><%= currentUser.name %></div>
+                                <div class="text-muted small text-truncate">@<%= currentUser.username %> • <span class="badge bg-light text-dark text-capitalize"><%= currentUser.role %></span></div>
+                            </li>
+                            <li><a class="dropdown-item py-2" href="/bookings/my-trips"><i class="fa-solid fa-suitcase me-2 text-muted"></i> My Trips</a></li>
+                            <li><a class="dropdown-item py-2" href="/wishlist"><i class="fa-regular fa-heart me-2 text-muted"></i> Wishlist</a></li>
+                            <li><a class="dropdown-item py-2" href="/dashboard/guest"><i class="fa-solid fa-gauge me-2 text-muted"></i> Guest Dashboard</a></li>
+
+                            <% if (currentUser.role === 'host' || currentUser.role === 'admin') { %>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="dropdown-header text-uppercase fs-7 fw-bold">Hosting</li>
+                                <li><a class="dropdown-item py-2" href="/dashboard/host"><i class="fa-solid fa-chart-line me-2 text-muted"></i> Host Dashboard</a></li>
+                                <li><a class="dropdown-item py-2" href="/bookings/host-reservations"><i class="fa-solid fa-calendar-check me-2 text-muted"></i> Reservations</a></li>
+                                <li><a class="dropdown-item py-2" href="/listings/new"><i class="fa-solid fa-house-chimney-medical me-2 text-muted"></i> Add Property</a></li>
+                            <% } %>
+
+                            <% if (currentUser.role === 'admin') { %>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="dropdown-header text-uppercase fs-7 fw-bold text-danger">Administration</li>
+                                <li><a class="dropdown-item py-2 text-danger fw-semibold" href="/dashboard/admin"><i class="fa-solid fa-shield-halved me-2"></i> Admin Panel</a></li>
+                            <% } %>
+
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2" href="/profile"><i class="fa-regular fa-user me-2 text-muted"></i> Account Profile</a></li>
+                            <li><a class="dropdown-item py-2 text-danger" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Log out</a></li>
+                        </ul>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold text-dark px-3" href="/listings">Explore</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-dark rounded-pill px-3 py-1 fw-semibold me-2" href="/login">Log in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn brand-btn rounded-pill px-3 py-1 fw-semibold text-white" href="/register">Sign up</a>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>

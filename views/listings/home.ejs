@@ -1,0 +1,20 @@
+<%- layout("/layouts/boilerplate") %>
+
+<div class="home-hero-container position-relative overflow-hidden rounded-5 my-4 mx-3 mx-md-0 p-5 text-white" style="background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat; min-height: 480px; display: flex; align-items: center;">
+    <div class="container text-center py-5">
+        <h1 class="display-3 fw-bold mb-3">Find Your Next Getaway</h1>
+        <p class="lead mb-4 mx-auto" style="max-width: 600px;">
+            Discover extraordinary homes, beach cottages, secluded mountain cabins, and luxury villas around the world.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/listings" class="btn brand-btn btn-lg text-white rounded-pill px-5 fw-bold shadow">
+                <i class="fa-solid fa-compass me-2"></i> Explore All Stays
+            </a>
+            <% if (typeof currentUser === 'undefined' || !currentUser) { %>
+                <a href="/register" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-semibold">
+                    Sign Up Free
+                </a>
+            <% } %>
+        </div>
+    </div>
+</div>

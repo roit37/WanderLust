@@ -1,0 +1,22 @@
+<%- layout("/layouts/boilerplate") %>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <h2 class="fw-bold mb-3">Privacy Policy</h2>
+            <p class="text-muted">Last updated: <%= new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" }) %></p>
+            <hr class="mb-4">
+
+            <div class="lh-lg text-secondary">
+                <h5 class="fw-bold text-dark">1. Information We Collect</h5>
+                <p>We collect information you provide directly to us when creating an account, publishing a property listing, or making a reservation on WanderLust.</p>
+
+                <h5 class="fw-bold text-dark mt-4">2. How We Protect Your Data</h5>
+                <p>Your passwords are encrypted using one-way bcrypt hashing. Sessions are stored securely with HTTP-only cookies in an isolated database session store.</p>
+
+                <h5 class="fw-bold text-dark mt-4">3. Contact Us</h5>
+                <p>If you have any questions about this privacy statement, please contact us at privacy@wanderlust.com.</p>
+            </div>
+        </div>
+    </div>
+</div>

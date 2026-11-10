@@ -1,0 +1,188 @@
+<%- layout("/layouts/boilerplate") %>
+
+<div class="container pb-5">
+    <!-- Categories Filter Bar -->
+    <div class="categories-container my-3">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="categories-scroll-wrapper d-flex align-items-center gap-4 overflow-x-auto py-2 flex-grow-1">
+                <% 
+                const cats = [
+                    { name: "All", icon: "fa-solid fa-earth-americas" },
+                    { name: "Trending", icon: "fa-solid fa-fire" },
+                    { name: "Beachfront", icon: "fa-solid fa-umbrella-beach" },
+                    { name: "Iconic Cities", icon: "fa-solid fa-city" },
+                    { name: "Mountains", icon: "fa-solid fa-mountain" },
+                    { name: "Castles", icon: "fa-brands fa-fort-awesome" },
+                    { name: "Amazing Pools", icon: "fa-solid fa-person-swimming" },
+                    { name: "Camping", icon: "fa-solid fa-campground" },
+                    { name: "Farms", icon: "fa-solid fa-cow" },
+                    { name: "Arctic", icon: "fa-regular fa-snowflake" },
+                    { name: "Domes", icon: "fa-solid fa-igloo" },
+                    { name: "Rooms", icon: "fa-solid fa-bed" },
+                    { name: "Luxury", icon: "fa-solid fa-crown" }
+                ];
+                const activeCat = (typeof filters !== 'undefined' && filters.category) ? filters.category : "All";
+                %>
+
+                <% for (let cat of cats) { %>
+                    <a href="/listings?<%= (filters.q ? 'q=' + encodeURIComponent(filters.q) + '&' : '') + (cat.name === 'All' ? '' : 'category=' + encodeURIComponent(cat.name)) %>" 
+                       class="category-item text-decoration-none d-flex flex-column align-items-center gap-1 text-center <%= (activeCat === cat.name || (cat.name === 'All' && !filters.category)) ? 'active' : '' %>">
+                        <i class="<%= cat.icon %> fs-5"></i>
+                        <span class="small fw-semibold"><%= cat.name %></span>
+                    </a>
+                <% } %>
+            </div>
+
+            <!-- Filter Controls Toggle Button -->
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2 px-3 py-2 shadow-sm" type="button" data-bs-toggle="collapse" data-bs-target="#advancedFilters" aria-expanded="false" aria-controls="advancedFilters">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span class="fw-semibold small">Filters</span>
+                </button>
+
+                <div class="tax-toggle-pill border rounded-pill px-3 py-2 d-none d-md-flex align-items-center gap-2 shadow-sm">
+                    <span class="small fw-semibold">Display total before taxes</span>
+                    <div class="form-check form-switch m-0 p-0">
+                        <input class="form-check-input ms-2" type="checkbox" role="switch" id="taxSwitch">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible Advanced Filter Panel -->
+        <div class="collapse mt-3" id="advancedFilters">
+            <div class="card card-body border-0 shadow-sm rounded-4 p-4 bg-light">
+                <form action="/listings" method="GET" class="row g-3 align-items-end">
+                    <% if (filters.category) { %>
+                        <input type="hidden" name="category" value="<%= filters.category %>">
+                    <% } %>
+
+                    <div class="col-12 col-md-3">
+                        <label class="form-label small fw-bold text-muted">Destination / Keyword</label>
+                        <input type="text" name="q" class="form-control rounded-pill" placeholder="e.g. Malibu, Paris, Cabin" value="<%= filters.q || '' %>">
+                    </div>
+
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small fw-bold text-muted">Min Price (₹)</label>
+                        <input type="number" name="minPrice" class="form-control rounded-pill" placeholder="Min" value="<%= filters.minPrice || '' %>">
+                    </div>
+
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small fw-bold text-muted">Max Price (₹)</label>
+                        <input type="number" name="maxPrice" class="form-control rounded-pill" placeholder="Max" value="<%= filters.maxPrice || '' %>">
+                    </div>
+
+                    <div class="col-6 col-md-2">
+                        <label class="form-label small fw-bold text-muted">Guests</label>
+                        <input type="number" name="guests" class="form-control rounded-pill" min="1" placeholder="Guests" value="<%= filters.guests || '' %>">
+                    </div>
+
+                    <div class="col-6 col-md-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-dark rounded-pill flex-grow-1 fw-semibold">Apply Filters</button>
+                        <a href="/listings" class="btn btn-outline-secondary rounded-pill">Reset</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Search Notice -->
+    <% if (filters.q || filters.category || filters.minPrice || filters.maxPrice || filters.guests) { %>
+        <div class="d-flex align-items-center justify-content-between my-3 p-3 bg-light rounded-4">
+            <div class="small text-muted">
+                Showing results for: 
+                <% if (filters.q) { %><span class="badge bg-white text-dark border me-1">"<%= filters.q %>"</span><% } %>
+                <% if (filters.category) { %><span class="badge bg-white text-dark border me-1">Category: <%= filters.category %></span><% } %>
+                <% if (filters.minPrice || filters.maxPrice) { %><span class="badge bg-white text-dark border me-1">₹<%= filters.minPrice || 0 %> - ₹<%= filters.maxPrice || '∞' %></span><% } %>
+                <% if (filters.guests) { %><span class="badge bg-white text-dark border me-1"><%= filters.guests %>+ guests</span><% } %>
+            </div>
+            <a href="/listings" class="btn btn-sm btn-link text-decoration-none text-danger fw-semibold">Clear all</a>
+        </div>
+    <% } %>
+
+    <!-- Listings Grid -->
+    <% if (allListings && allListings.length > 0) { %>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-1">
+            <% for (let listing of allListings) { %>
+                <div class="col">
+                    <div class="listing-card h-100 position-relative">
+                        <!-- Wishlist Toggle Form/Button -->
+                        <% 
+                            const isLiked = (typeof currentUser !== 'undefined' && currentUser && currentUser.wishlist) ? currentUser.wishlist.some(id => id && id.toString() === listing._id.toString()) : false;
+                        %>
+                        <form action="/wishlist/toggle/<%= listing._id %>" method="POST" class="wishlist-form position-absolute top-0 end-0 m-3 z-3">
+                            <button type="submit" class="btn-wishlist border-0 bg-transparent" aria-label="Toggle Wishlist">
+                                <i class="<%= isLiked ? 'fa-solid fa-heart text-danger' : 'fa-regular fa-heart text-white' %> fs-5 filter-shadow"></i>
+                            </button>
+                        </form>
+
+                        <!-- Card Anchor -->
+                        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark d-block">
+                            <!-- Image Frame -->
+                            <div class="listing-img-container rounded-4 overflow-hidden position-relative mb-2">
+                                <img
+                                    src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=800&q=60' %>"
+                                    class="w-100 h-100 object-fit-cover listing-thumbnail"
+                                    alt="<%= listing.title %>"
+                                    loading="lazy"
+                                >
+                                <span class="badge bg-dark bg-opacity-75 position-absolute bottom-0 start-0 m-2 rounded-pill small">
+                                    <%= listing.category || 'Trending' %>
+                                </span>
+                            </div>
+
+                            <!-- Meta Info -->
+                            <div class="listing-details">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <h6 class="fw-bold mb-0 text-truncate me-2"><%= listing.location %>, <%= listing.country %></h6>
+                                    <div class="d-flex align-items-center gap-1 small">
+                                        <i class="fa-solid fa-star text-warning"></i>
+                                        <span class="fw-semibold"><%= listing.avgRating > 0 ? listing.avgRating.toFixed(1) : 'New' %></span>
+                                    </div>
+                                </div>
+                                <p class="text-muted small text-truncate mb-1"><%= listing.title %></p>
+                                <div class="price-container">
+                                    <span class="fw-bold">&#8377; <%= Number(listing.price).toLocaleString("en-IN") %></span>
+                                    <span class="text-muted small">/ night</span>
+                                    <div class="tax-info small text-muted d-none">
+                                        &#8377; <%= Math.round(Number(listing.price) * 1.18).toLocaleString("en-IN") %> total with GST
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Pagination Controls -->
+        <% if (pagination && pagination.totalPages > 1) { %>
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item <%= !pagination.hasPrevPage ? 'disabled' : '' %>">
+                        <a class="page-link rounded-pill me-2 px-3" href="/listings?<%= (filters.q ? 'q=' + encodeURIComponent(filters.q) + '&' : '') + (filters.category ? 'category=' + encodeURIComponent(filters.category) + '&' : '') %>page=<%= pagination.currentPage - 1 %>">Previous</a>
+                    </li>
+                    <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+                        <li class="page-item <%= pagination.currentPage === i ? 'active' : '' %>">
+                            <a class="page-link rounded-circle mx-1 text-center" style="width: 40px; height: 40px; line-height: 24px;" href="/listings?<%= (filters.q ? 'q=' + encodeURIComponent(filters.q) + '&' : '') + (filters.category ? 'category=' + encodeURIComponent(filters.category) + '&' : '') %>page=<%= i %>"><%= i %></a>
+                        </li>
+                    <% } %>
+                    <li class="page-item <%= !pagination.hasNextPage ? 'disabled' : '' %>">
+                        <a class="page-link rounded-pill ms-2 px-3" href="/listings?<%= (filters.q ? 'q=' + encodeURIComponent(filters.q) + '&' : '') + (filters.category ? 'category=' + encodeURIComponent(filters.category) + '&' : '') %>page=<%= pagination.currentPage + 1 %>">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        <% } %>
+
+    <% } else { %>
+        <!-- Empty State -->
+        <div class="text-center py-5 my-5">
+            <div class="empty-state-icon mb-3">
+                <i class="fa-solid fa-house-laptop text-muted display-3"></i>
+            </div>
+            <h4 class="fw-bold">No exact matches found</h4>
+            <p class="text-muted">Try changing or clearing some of your filters or searching for a different destination.</p>
+            <a href="/listings" class="btn btn-dark rounded-pill px-4 py-2 mt-2">Clear all filters</a>
+        </div>
+    <% } %>
+</div>

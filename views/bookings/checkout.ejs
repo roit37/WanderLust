@@ -1,0 +1,103 @@
+<%- layout("/layouts/boilerplate") %>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <!-- Back Link -->
+            <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark fw-semibold mb-4 d-inline-block">
+                <i class="fa-solid fa-chevron-left me-2"></i> Back to property
+            </a>
+
+            <h2 class="fw-bold mb-4">Request to book</h2>
+
+            <div class="row g-5">
+                <!-- Left Form Column -->
+                <div class="col-12 col-md-7">
+                    <form action="/bookings/create/<%= listing._id %>" method="POST">
+                        <input type="hidden" name="booking[checkIn]" value="<%= checkIn %>">
+                        <input type="hidden" name="booking[checkOut]" value="<%= checkOut %>">
+                        <input type="hidden" name="booking[guests]" value="<%= guests %>">
+
+                        <!-- Trip Details Section -->
+                        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                            <h5 class="fw-bold mb-3">Your Trip</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div class="fw-semibold">Dates</div>
+                                    <div class="text-muted small">
+                                        <%= new Date(checkIn).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %> – 
+                                        <%= new Date(checkOut).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) %>
+                                        (<%= priceBreakdown.nights %> <%= priceBreakdown.nights === 1 ? 'night' : 'nights' %>)
+                                    </div>
+                                </div>
+                                <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-outline-secondary rounded-pill">Edit</a>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-semibold">Guests</div>
+                                    <div class="text-muted small"><%= guests %> <%= guests === 1 ? 'guest' : 'guests' %></div>
+                                </div>
+                                <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-outline-secondary rounded-pill">Edit</a>
+                            </div>
+                        </div>
+
+                        <!-- Special Requests -->
+                        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                            <h5 class="fw-bold mb-2">Message the Host</h5>
+                            <p class="text-muted small mb-3">Let <%= listing.owner ? listing.owner.name : 'your host' %> know a little about your trip and arrival time.</p>
+                            <textarea name="booking[specialRequests]" rows="3" class="form-control rounded-3" placeholder="Hello! We are visiting for a weekend vacation and look forward to staying at your home..."></textarea>
+                        </div>
+
+                        <!-- Ground Rules / Policies -->
+                        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-light">
+                            <h6 class="fw-bold mb-2"><i class="fa-solid fa-shield-halved text-success me-2"></i> Ground rules & cancellation</h6>
+                            <p class="small text-muted mb-0">
+                                We ask every guest to remember a few simple things: follow the house rules, treat the host's home like your own, and respect quiet hours. Free cancellation up to 48 hours prior to check-in.
+                            </p>
+                        </div>
+
+                        <button type="submit" class="btn brand-btn w-100 py-3 rounded-pill text-white fw-bold fs-5 shadow-sm">
+                            Confirm and Pay (Demo Checkout)
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Price Summary Card -->
+                <div class="col-12 col-md-5">
+                    <div class="card border-0 shadow-lg rounded-4 p-4 sticky-top" style="top: 100px;">
+                        <div class="d-flex gap-3 align-items-center pb-4 border-bottom mb-4">
+                            <img src="<%= listing.image && listing.image.url ? listing.image.url : '' %>" alt="<%= listing.title %>" class="rounded-3" style="width: 100px; height: 80px; object-fit: cover;">
+                            <div>
+                                <div class="small text-muted"><%= listing.category %></div>
+                                <h6 class="fw-bold mb-1 text-truncate" style="max-width: 200px;"><%= listing.title %></h6>
+                                <div class="small">
+                                    <i class="fa-solid fa-star text-warning"></i>
+                                    <span><%= listing.avgRating > 0 ? listing.avgRating.toFixed(1) : 'New' %> (<%= listing.totalReviews || 0 %>)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold mb-3">Price details</h5>
+                        <div class="d-flex justify-content-between text-muted mb-2">
+                            <span>&#8377; <%= priceBreakdown.pricePerNight %> × <%= priceBreakdown.nights %> nights</span>
+                            <span>&#8377; <%= priceBreakdown.accommodationPrice.toLocaleString("en-IN") %></span>
+                        </div>
+                        <div class="d-flex justify-content-between text-muted mb-2">
+                            <span>Cleaning fee</span>
+                            <span>&#8377; <%= priceBreakdown.cleaningFee.toLocaleString("en-IN") %></span>
+                        </div>
+                        <div class="d-flex justify-content-between text-muted mb-3">
+                            <span>WanderLust service fee</span>
+                            <span>&#8377; <%= priceBreakdown.serviceFee.toLocaleString("en-IN") %></span>
+                        </div>
+                        <div class="border-top pt-3 d-flex justify-content-between fw-bold fs-4">
+                            <span>Total (INR)</span>
+                            <span class="text-danger">&#8377; <%= priceBreakdown.totalPrice.toLocaleString("en-IN") %></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
